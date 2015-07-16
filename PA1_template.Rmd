@@ -168,7 +168,7 @@ For this part, the clean dataset without NA values will be used. We will follow 
 
 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, fig.align='center', fig.height=4, fig.width=9}
 #1:Creating the new factor variable:
   clean_data$date <- as.Date(clean_data$date, "%Y-%m-%d")
   clean_data$day_of_week <- weekdays(clean_data$date) #Names are in spanish
@@ -205,3 +205,4 @@ For this part, the clean dataset without NA values will be used. We will follow 
     theme(panel.grid.major=element_line(colour="grey"))
 ```
 
+The two patterns are different. Whereas in the weekdays there is a peak on the moorning and the activity starts at the interval 500, on the weekends the activity begins at interval 750 and the steps are more distributed across the day. 

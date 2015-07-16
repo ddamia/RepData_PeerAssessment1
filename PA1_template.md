@@ -300,5 +300,6 @@ For this part, the clean dataset without NA values will be used. We will follow 
     theme(panel.grid.major=element_line(colour="grey"))
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+<img src="figure/unnamed-chunk-7-1.png" title="plot of chunk unnamed-chunk-7" alt="plot of chunk unnamed-chunk-7" style="display: block; margin: auto;" />
 
+The two patterns are different. Whereas in the weekdays there is a peak on the moorning and the activity starts at the interval 500, on the weekends the activity begins at interval 750 and the steps are more distributed across the day. 
