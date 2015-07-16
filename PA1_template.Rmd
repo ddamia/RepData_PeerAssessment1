@@ -1,7 +1,7 @@
 ---
 title: "Peer Assessment 1"
-author: "DamiÃfÆ'Ã???â???TÃfâ???sÃ,Â  Valero"
-date: "Wednesday, July 15, 2015"
+author: "Damià Valero"
+date: "Wednesday, July 16, 2015"
 output: html_document
 ---
 
