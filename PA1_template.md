@@ -9,20 +9,28 @@ output: html_document
 
 This section includes the data loading in order to perform the analysis. The code is presented as follows: 
 
-```{r, echo=TRUE}
+
+```r
 setwd("C:/Users/Damià/Desktop/Data science specialization/5.Reproducible Research/Project 1")
 data <- read.csv("./activity.csv",
                  stringsAsFactors = FALSE,
                  sep = ",", 
                  header = TRUE,
                  na.string = "NA")
-
 ```
 
 Now it is possible to have a look at the data:
 
-```{r, echo=TRUE}
+
+```r
 str(data)
+```
+
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : chr  "2012-10-01" "2012-10-01" "2012-10-01" "2012-10-01" ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
 ```
 
 ##Mean total number of steps taken per day
@@ -36,29 +44,64 @@ It is necessary to follow this steps:
 
 3. Calculate and report the mean and median of the total number of steps taken per day
 
-```{r, echo=TRUE, fig.align='center', fig.height=5, fig.width=5}
+
+```r
 #Calculate the total number of steps for each day
   steps_per_day <- with(data, tapply(steps, date, sum))
 
 #Remove the NA values
   steps_per_day[complete.cases(steps_per_day)]
+```
 
+```
+## 2012-10-02 2012-10-03 2012-10-04 2012-10-05 2012-10-06 2012-10-07 
+##        126      11352      12116      13294      15420      11015 
+## 2012-10-09 2012-10-10 2012-10-11 2012-10-12 2012-10-13 2012-10-14 
+##      12811       9900      10304      17382      12426      15098 
+## 2012-10-15 2012-10-16 2012-10-17 2012-10-18 2012-10-19 2012-10-20 
+##      10139      15084      13452      10056      11829      10395 
+## 2012-10-21 2012-10-22 2012-10-23 2012-10-24 2012-10-25 2012-10-26 
+##       8821      13460       8918       8355       2492       6778 
+## 2012-10-27 2012-10-28 2012-10-29 2012-10-30 2012-10-31 2012-11-02 
+##      10119      11458       5018       9819      15414      10600 
+## 2012-11-03 2012-11-05 2012-11-06 2012-11-07 2012-11-08 2012-11-11 
+##      10571      10439       8334      12883       3219      12608 
+## 2012-11-12 2012-11-13 2012-11-15 2012-11-16 2012-11-17 2012-11-18 
+##      10765       7336         41       5441      14339      15110 
+## 2012-11-19 2012-11-20 2012-11-21 2012-11-22 2012-11-23 2012-11-24 
+##       8841       4472      12787      20427      21194      14478 
+## 2012-11-25 2012-11-26 2012-11-27 2012-11-28 2012-11-29 
+##      11834      11162      13646      10183       7047
+```
+
+```r
 #Histogram
   hist(steps_per_day, breaks=20, xlab="Steps per day", 
                 main="Number of steps taken per day",col="red",
                 ylim=c(0,15))
+```
 
+<img src="figure/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
+
+```r
 #Mean and median
   mean_steps <- round(mean(steps_per_day, na.rm=T),2)
   median_steps <- round(median(steps_per_day, na.rm=T),0)
   mean_steps;median_steps
+```
 
+```
+## [1] 10766.19
+```
+
+```
+## [1] 10765
 ```
 
 Finally, the following results are obtained: 
 
-- Mean total number of steps per day:   **`r format(mean_steps,scientific=FALSE)`**
-- Median of number of steps per day:    **`r format(median_steps,scientific=FALSE)`**
+- Mean total number of steps per day:   **10766.19**
+- Median of number of steps per day:    **10765**
 
 
 ##Average daily activity pattern
@@ -69,7 +112,8 @@ This section presents the study of the daily activity pattern. The next steps ar
 
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-```{r, echo=TRUE,echo=TRUE, fig.align='center', fig.height=5, fig.width=5}
+
+```r
 #For this part, the NA values won't be considered in the analysis: 
   clean_data <- data[complete.cases(data$steps),]
 
@@ -84,15 +128,23 @@ This section presents the study of the daily activity pattern. The next steps ar
 #Plot:
   plot(y=data_interval$steps, x=data_interval$interval, type="l",col="red",
        xlab="Intervals", ylab="Steps", main="Average number of steps for each 5-minute interval")
+```
 
+<img src="figure/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" />
+
+```r
 #Interval with the maximum number of steps
   row_position <- which(data_interval$steps %in% max(data_interval$steps))
   max_steps_interval <- data_interval[row_position,"interval"]; max_steps_interval
 ```
 
+```
+## [1] "835"
+```
+
 After the analysis, we can conclude that:
 
-- The 5-minute time interval with the highest average steps is: **`r max_steps_interval`** 
+- The 5-minute time interval with the highest average steps is: **835** 
 - Which corresponds to:                                         **8 hours 35 minutes** time interval.
 
 
@@ -108,16 +160,34 @@ Note that there are a number of days/intervals where there are missing values (c
 
 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-```{r, echo=TRUE, fig.align='center', fig.height=5, fig.width=5}
+
+```r
 #Total number of missing values (NA) in the dataset: 
   NA_rows <- sum(as.numeric(colSums(is.na(data)))); NA_rows
+```
 
+```
+## [1] 2304
+```
 
+```r
 #Filling all missing values
   rownames(data_interval)=data_interval$interval #date_interval is the set used in the previous part 2, which contains the avg step value for each 5-minute time interval. 
   NA_data <- data[is.na(data$steps),]
   head(NA_data)  #look at the data
+```
 
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
+```
+
+```r
   for(i in 1:nrow(NA_data)){
     if(is.na(NA_data[i,"steps"])==TRUE){
       int <- as.character(NA_data[i,"interval"])
@@ -125,7 +195,19 @@ Note that there are a number of days/intervals where there are missing values (c
     }
   }
   head(NA_data)#taking a look at the replaced data: 
+```
 
+```
+##       steps       date interval
+## 1 1.7169811 2012-10-01        0
+## 2 0.3396226 2012-10-01        5
+## 3 0.1320755 2012-10-01       10
+## 4 0.1509434 2012-10-01       15
+## 5 0.0754717 2012-10-01       20
+## 6 2.0943396 2012-10-01       25
+```
+
+```r
 #Creating the new dataset with the mean values of each interval replacing the NAs.
   clean_data <- rbind(NA_data, data[!is.na(data$steps),])
   clean_data <- clean_data[order(clean_data$date, clean_data$interval),]
@@ -134,31 +216,43 @@ Note that there are a number of days/intervals where there are missing values (c
   steps_per_day2 <- with(clean_data, tapply(steps, date, sum))
   hist(steps_per_day2, breaks=20, xlab="Steps per day",
        main="Number of steps taken per day",col="red", ylim=c(0,15))
+```
 
+<img src="figure/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" />
+
+```r
 #Mean and median
   mean_steps2 <- round(mean(steps_per_day2),2)
   median_steps2 <- round(median(steps_per_day2),0)
   mean_steps2;median_steps2
-  
+```
 
+```
+## [1] 10766.19
+```
+
+```
+## [1] 10766
 ```
 
 
-Using the approach of substituding the **`r NA_rows`** NA values for the mean values for that 5-minute interval, the results are almost equal, showing that the approach is good enough:
+Using the approach of substituding the **2304** NA values for the mean values for that 5-minute interval, the results are almost equal, showing that the approach is good enough:
 
-- Means (1st with NA, 2nd without NA): **`r format(mean_steps,scientific=FALSE)`** = **`r format(mean_steps2,scientific=FALSE)`**. 
-- Medians (1st with NA, 2nd without NA): **`r format(median_steps,scientific=FALSE)`** != **`r format(median_steps2,scientific=FALSE)`**. Almost equal median. 
+- Means (1st with NA, 2nd without NA): **10766.19** = **10766.19**. 
+- Medians (1st with NA, 2nd without NA): **10765** != **10766**. Almost equal median. 
 - Histogram (1st with NA, 2nd without NA): There is a clear difference, as it can be seen in the next figures. The peak of steps is at the same interval, but higher. The other values are still the same for both plots. 
 
-```{r, echo=TRUE, fig.align='center', fig.height=4, fig.width=9}
+
+```r
 par(mfrow=c(1,2))
   hist(steps_per_day, breaks=20, xlab="Steps per day", 
                 main="Steps per day: With NAs",col="red",
                 ylim=c(0,20))
   hist(steps_per_day2, breaks=20, xlab="Steps per day",
        main="Steps per day: Without NAs",col="red", ylim=c(0,20))
-
 ```
+
+<img src="figure/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
 
 ##Differences in activity patterns between weekdays and weekends
 
@@ -168,7 +262,8 @@ For this part, the clean dataset without NA values will be used. We will follow 
 
 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
-```{r, echo=TRUE}
+
+```r
 #1:Creating the new factor variable:
   clean_data$date <- as.Date(clean_data$date, "%Y-%m-%d")
   clean_data$day_of_week <- weekdays(clean_data$date) #Names are in spanish
@@ -204,4 +299,6 @@ For this part, the clean dataset without NA values will be used. We will follow 
     theme(panel.grid.minor=element_line(colour="lightgrey"))+
     theme(panel.grid.major=element_line(colour="grey"))
 ```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
 
